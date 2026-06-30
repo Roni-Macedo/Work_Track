@@ -1,4 +1,4 @@
-package com.example.worktrack.ui.presentation.screen
+package com.example.worktrack.ui.presentation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
