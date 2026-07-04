@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun RowScope.WorkTrackNavigationItem(
+fun RowScope.BottomAppBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: ImageVector,
@@ -29,11 +30,15 @@ fun RowScope.WorkTrackNavigationItem(
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(28.dp)
             )
         },
         label = {
-            Text(label, fontSize = MaterialTheme.typography.titleSmall.fontSize)
+            Text(
+                label,
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontWeight = FontWeight.SemiBold
+            )
         },
         colors = NavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.primary,
