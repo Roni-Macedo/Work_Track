@@ -1,6 +1,5 @@
 package com.example.worktrack.ui.presentation.screens.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,31 +12,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.BusinessCenter
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -47,13 +49,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.worktrack.ui.RecordItem
-import com.example.worktrack.ui.SummaryCard
+import com.example.worktrack.ui.presentation.components.getWeekDay
 import com.example.worktrack.ui.presentation.screens.home.homecomponents.BottomAppBarItem
-import com.example.worktrack.ui.recentRecords
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,13 +82,13 @@ fun HomeScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Segunda-feira",
+                            text = getWeekDay().weekDay,
                             color = MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "26 de maio de 2026",
+                            text = getWeekDay().date,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -244,3 +244,147 @@ fun HomeScreen(
         }
     }
 }
+
+// Componente para os cards de resumo estatístico
+@Composable
+fun SummaryCard(
+    title: String,
+    value: String,
+    icon: ImageVector,
+    iconColor: Color,
+    modifier: Modifier = Modifier
+) {
+
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(iconColor.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+// Componente para os itens da lista de registros recentes
+@Composable
+fun RecordItem(record: RecordData) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Ícone circular com cor personalizada
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(record.color),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = record.icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = record.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = record.dayOfWeek,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = record.date,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+data class RecordData(
+    val title: String,
+    val dayOfWeek: String,
+    val date: String,
+    val icon: ImageVector,
+    val color: Color
+)
+
+val recentRecords = listOf(
+    RecordData(
+        "Empresa",
+        "Segunda-feira",
+        "26/05/2026",
+        Icons.Default.BusinessCenter,
+        Color(0xFF4DB6AC)
+    ),
+    RecordData("Casa", "Segunda-feira", "26/05/2026", Icons.Default.Home, Color(0xFF7E57C2)),
+    RecordData("Mercado", "Domingo", "25/05/2026", Icons.Default.ShoppingCart, Color(0xFFFFA726)),
+    RecordData("Oficina", "Sábado", "24/05/2026", Icons.Default.Build, Color(0xFF1E88E5)),
+    RecordData("Oficina", "Sábado", "24/05/2026", Icons.Default.Build, Color(0xFF1E88E5)),
+    RecordData("Oficina", "Sábado", "24/05/2026", Icons.Default.Build, Color(0xFF1E88E5))
+)

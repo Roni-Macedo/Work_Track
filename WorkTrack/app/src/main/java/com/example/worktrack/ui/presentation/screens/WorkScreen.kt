@@ -53,7 +53,7 @@ fun WorkScreen(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text(getWeekDay())
+                    Text(getWeekDay().date)
                 },
                 actions = {
                     IconButton(onClick = { viewModel.onOpenMenu() }) {
