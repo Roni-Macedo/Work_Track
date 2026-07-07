@@ -8,6 +8,7 @@ import com.example.worktrack.ui.presentation.screens.add.AddScreen
 import com.example.worktrack.ui.presentation.screens.dashboard.DashboardScreen
 import com.example.worktrack.ui.presentation.screens.edit.EditScreen
 import com.example.worktrack.ui.presentation.screens.home.HomeScreen
+import com.example.worktrack.ui.presentation.screens.notes.NotesScreen
 
 @Composable
 fun AppNavigation() {
@@ -34,6 +35,19 @@ fun AppNavigation() {
                         },
                         onEditClick = { id ->
                             backStack.add(Edit(id))
+                        },
+                        onNotesClick = {
+                            backStack.add(Notes)
+                        }
+                    )
+                }
+
+                Notes -> {
+                    NotesScreen(
+                        onBack = {
+                            if (backStack.isNotEmpty()) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
                         }
                     )
                 }

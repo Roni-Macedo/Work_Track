@@ -37,7 +37,10 @@ import com.example.worktrack.ui.theme.TextPrimary
 import com.example.worktrack.ui.theme.TextSecondary
 
 @Composable
-fun NotesCard(modifier: Modifier = Modifier) {
+fun NotesCard(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -96,7 +99,7 @@ fun NotesCard(modifier: Modifier = Modifier) {
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     color = AppColors.tertiary(),
                     modifier = Modifier.size(20.dp),
-                    onClick = { /* Ação ao clicar */ }
+                    onClick = onClick
                 )
             }
         }

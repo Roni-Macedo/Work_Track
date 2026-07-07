@@ -61,6 +61,7 @@ fun HomeScreen(
     onAddClick: () -> Unit = {},
     onDashboardClick: () -> Unit = {},
     onEditClick: (Long) -> Unit = {},
+    onNotesClick: () -> Unit = {},
     viewModel: WorkViewModel = hiltViewModel()
 ) {
 
@@ -171,7 +172,7 @@ fun HomeScreen(
             // SEÇÃO: Resumo do dia (Estática, não rola com a lista)
 
             Text(
-                text = "Minhas anotaçoes",
+                text = "Minhas anotações",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.onBackground(),
@@ -190,7 +191,7 @@ fun HomeScreen(
                         modifier = Modifier.padding(2.dp),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        NotesCard()
+                        NotesCard(onClick = onNotesClick)
                     }
                 }
             }
