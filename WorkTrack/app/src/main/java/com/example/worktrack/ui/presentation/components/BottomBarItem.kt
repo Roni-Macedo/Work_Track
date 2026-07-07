@@ -1,4 +1,4 @@
-package com.example.worktrack.ui.presentation.screens.home.homecomponents
+package com.example.worktrack.ui.presentation.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size

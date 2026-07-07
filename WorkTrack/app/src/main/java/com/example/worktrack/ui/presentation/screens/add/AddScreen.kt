@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,6 +26,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,18 +38,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.example.worktrack.ui.CustomTextField
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.worktrack.ui.presentation.components.getWeekDay
+import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 
 @Composable
 fun AddScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    viewModel: WorkViewModel = hiltViewModel()
 ) {
 
     var local by rememberSaveable { mutableStateOf("") }
+
+    val info = getWeekDay()
+    var diaSemana by rememberSaveable { mutableStateOf(info.weekDay) }
+    var data by rememberSaveable { mutableStateOf(info.date) }
 
     Scaffold(
         // Fundo azul na parte superior
@@ -112,8 +122,8 @@ fun AddScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = getWeekDay().weekDay,
-                onValueChange = {},
+                value = diaSemana,
+                onValueChange = { diaSemana = it },
                 placeholder = "Selecione o dia",
                 trailingIcon = Icons.Outlined.KeyboardArrowDown
             )
@@ -129,8 +139,8 @@ fun AddScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = getWeekDay().date,
-                onValueChange = {},
+                value = data,
+                onValueChange = { data = it },
                 placeholder = "",
                 trailingIcon = Icons.Outlined.CalendarMonth
             )
@@ -146,7 +156,7 @@ fun AddScreen(
             )
             CustomTextField(
                 value = "",
-                onValueChange = {},
+                onValueChange = {  },
                 placeholder = "Digite alguma observação...",
                 modifier = Modifier.height(120.dp),
                 singleLine = false,
@@ -157,7 +167,12 @@ fun AddScreen(
 
             // Botão: Salvar registro
             Button(
-                onClick = { /* Salvar */ },
+                onClick = {
+                    if (local.isNotBlank()) {
+                        viewModel.salvar(local, diaSemana, data)
+                        onBack()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -185,4 +200,52 @@ fun AddScreen(
             }
         }
     }
+}
+
+
+@Composable
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit = {},
+    placeholder: String,
+    trailingIcon: ImageVector? = null,
+    modifier: Modifier = Modifier,
+    singleLine: Boolean = true,
+    readOnly: Boolean = false,
+    capitalization: KeyboardCapitalization = KeyboardCapitalization.None
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.fillMaxWidth(),
+        placeholder = {
+            Text(
+                text = placeholder,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        trailingIcon = {
+            if (trailingIcon != null) {
+                Icon(
+                    imageVector = trailingIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                )
+            }
+        },
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        ),
+        singleLine = singleLine,
+        readOnly = readOnly,
+        keyboardOptions = KeyboardOptions(
+            capitalization = capitalization
+        ),
+        textStyle = MaterialTheme.typography.bodyLarge
+    )
 }

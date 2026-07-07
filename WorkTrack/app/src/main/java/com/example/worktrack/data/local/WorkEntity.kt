@@ -8,5 +8,6 @@ data class WorkEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val local: String,
-    val dayOfWeek: String
+    val dayOfWeek: String,
+    val date: String
 )

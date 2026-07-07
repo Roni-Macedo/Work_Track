@@ -3,7 +3,8 @@ package com.example.worktrack.domain.model
 data class Work(
     val id: Int,
     val local: String,
-    val dayOfWeek: String
+    val dayOfWeek: String,
+    val date: String
 )
 
 data class LocalCount(

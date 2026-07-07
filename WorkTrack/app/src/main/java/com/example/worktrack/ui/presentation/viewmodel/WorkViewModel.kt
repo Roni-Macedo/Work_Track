@@ -87,11 +87,12 @@ class WorkViewModel @Inject constructor(
         showDeleteAllConfirmation = false
     }
 
-    fun salvar(local: String, diaSemana: String) {
+    fun salvar(local: String, diaSemana: String, data: String) {
         val work = Work(
             id = 0,
             local = local,
-            dayOfWeek = diaSemana
+            dayOfWeek = diaSemana,
+            date = data
         )
 
         viewModelScope.launch {

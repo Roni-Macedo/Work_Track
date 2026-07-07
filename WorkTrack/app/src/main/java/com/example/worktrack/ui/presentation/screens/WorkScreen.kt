@@ -125,7 +125,7 @@ fun WorkScreen(
                         viewModel.onCloseDialog()
                     },
                     onConfirmation = { texto, data ->
-                        viewModel.salvar(texto, data)
+//                        viewModel.salvar(texto, data)
                     }
                 )
             }
