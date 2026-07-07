@@ -16,3 +16,6 @@ data class Edit(
 
 @Serializable
 data object Dashboard : NavKey
+
+@Serializable
+data object Notes : NavKey

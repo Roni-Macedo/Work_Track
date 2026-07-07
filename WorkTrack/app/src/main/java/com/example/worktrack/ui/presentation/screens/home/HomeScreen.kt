@@ -53,7 +53,7 @@ import com.example.worktrack.ui.presentation.components.getWeekDay
 import com.example.worktrack.ui.presentation.components.BottomAppBarItem
 import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 import com.example.worktrack.ui.presentation.components.CardListItem
-import com.example.worktrack.ui.presentation.screens.NotesCard
+import com.example.worktrack.ui.presentation.components.NotesCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,8 +187,8 @@ fun HomeScreen(
 
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        modifier = Modifier.padding(2.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         NotesCard()
                     }
