@@ -23,24 +23,32 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.worktrack.R
 import com.example.worktrack.ui.common.AppColors
 import com.example.worktrack.ui.common.AppIcon
+import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 import com.example.worktrack.ui.theme.TextPrimary
 import com.example.worktrack.ui.theme.TextSecondary
 
 @Composable
 fun NotesCard(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    viewModel: WorkViewModel = hiltViewModel()
 ) {
+    val note by viewModel.note.collectAsState()
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -72,16 +80,25 @@ fun NotesCard(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
+                Text(
+                    text = "Minhas anotações",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Lembretes e informações importantes.",
+                    text = if (note.isBlank()) "Registre ideias, lembretes e informações importantes." else note,
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontSize = 13.sp,
                         lineHeight = 18.sp,
                         color = TextSecondary
-                    )
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 

@@ -22,6 +22,9 @@ class WorkViewModel @Inject constructor(
     val works = repository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
+    val note = repository.getNote()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
+
     val workCounts = works.map { list ->
         list.groupingBy { it.local }.eachCount()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyMap())
@@ -119,6 +122,12 @@ class WorkViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAll()
             onCloseDeleteAllConfirmation()
+        }
+    }
+
+    fun salvarNota(content: String) {
+        viewModelScope.launch {
+            repository.saveNote(content)
         }
     }
 }

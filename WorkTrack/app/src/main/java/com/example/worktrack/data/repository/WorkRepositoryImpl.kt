@@ -1,5 +1,6 @@
 package com.example.worktrack.data.repository
 
+import com.example.worktrack.data.local.NoteEntity
 import com.example.worktrack.data.local.WorkDao
 import com.example.worktrack.data.mapper.toDomain
 import com.example.worktrack.data.mapper.toEntity
@@ -32,5 +33,13 @@ class WorkRepositoryImpl(
         return dao.getAll().map { list ->
             list.map { it.toDomain() }
         }
+    }
+
+    override suspend fun saveNote(content: String) {
+        dao.insertNote(NoteEntity(content = content))
+    }
+
+    override fun getNote(): Flow<String> {
+        return dao.getNote().map { it ?: "" }
     }
 }

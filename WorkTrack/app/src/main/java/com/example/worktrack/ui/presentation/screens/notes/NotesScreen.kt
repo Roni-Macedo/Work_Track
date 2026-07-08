@@ -16,10 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -28,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,10 +35,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.worktrack.ui.presentation.components.getWeekDay
 import com.example.worktrack.ui.presentation.screens.add.CustomTextField
 import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 
@@ -49,7 +46,12 @@ fun NotesScreen(
     viewModel: WorkViewModel = hiltViewModel()
 ) {
 
+    val noteState by viewModel.note.collectAsState()
     var nota by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(noteState) {
+        nota = noteState
+    }
 
     Scaffold(
         // Fundo azul na parte superior
@@ -113,10 +115,8 @@ fun NotesScreen(
             // Botão: Salvar registro
             Button(
                 onClick = {
-                    if (nota.isNotBlank()) {
-
-                        onBack()
-                    }
+                    viewModel.salvarNota(nota)
+                    onBack()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

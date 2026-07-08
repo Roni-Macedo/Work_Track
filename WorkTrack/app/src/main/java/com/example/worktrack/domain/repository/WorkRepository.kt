@@ -11,4 +11,8 @@ interface WorkRepository {
     suspend fun deleteAll()
 
     fun getAll(): Flow<List<Work>>
+
+    // Notes
+    suspend fun saveNote(content: String)
+    fun getNote(): Flow<String>
 }

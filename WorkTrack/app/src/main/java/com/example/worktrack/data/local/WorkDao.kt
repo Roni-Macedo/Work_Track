@@ -34,4 +34,11 @@ interface WorkDao {
 """)
     fun getLocalCount(): Flow<List<LocalCount>>
 
+    // Notes
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    suspend fun insertNote(note: NoteEntity)
+
+    @Query("SELECT content FROM notes WHERE id = 1")
+    fun getNote(): Flow<String?>
+
 }
