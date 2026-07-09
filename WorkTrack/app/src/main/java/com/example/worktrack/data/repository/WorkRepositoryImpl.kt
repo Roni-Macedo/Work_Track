@@ -4,6 +4,7 @@ import com.example.worktrack.data.local.NoteEntity
 import com.example.worktrack.data.local.WorkDao
 import com.example.worktrack.data.mapper.toDomain
 import com.example.worktrack.data.mapper.toEntity
+import com.example.worktrack.domain.model.LocalCount
 import com.example.worktrack.domain.model.Work
 import com.example.worktrack.domain.repository.WorkRepository
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,10 @@ class WorkRepositoryImpl(
         return dao.getAll().map { list ->
             list.map { it.toDomain() }
         }
+    }
+
+    override fun getLocalCount(): Flow<List<LocalCount>> {
+        return dao.getLocalCount()
     }
 
     override suspend fun saveNote(content: String) {

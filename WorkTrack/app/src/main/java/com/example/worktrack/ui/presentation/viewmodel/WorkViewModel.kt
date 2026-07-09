@@ -22,6 +22,9 @@ class WorkViewModel @Inject constructor(
     val works = repository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
+    val localCounts = repository.getLocalCount()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
     val note = repository.getNote()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), "")
 
@@ -29,39 +32,50 @@ class WorkViewModel @Inject constructor(
         list.groupingBy { it.local }.eachCount()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyMap())
 
-    // Estados de UI
+    // Estados de UI (Diálogos e Menus)
     var showDialog by mutableStateOf(false)
-        private set
-
-    var showUpdateDialog by mutableStateOf(false)
         private set
 
     var showDeleteAllConfirmation by mutableStateOf(false)
         private set
 
-    var showSearchDialog by mutableStateOf(false)
+    var showMenu by mutableStateOf(false)
         private set
 
-    var showMenu by mutableStateOf(false)
+    // --- ESTADOS DOS CAMPOS DE TEXTO (MVVM) ---
+    var localInput by mutableStateOf("")
+        private set
+    var diaSemanaInput by mutableStateOf("")
+        private set
+    var dataInput by mutableStateOf("")
         private set
 
     var selectedWork by mutableStateOf<Work?>(null)
         private set
 
-    fun onOpenDialog() {
-        showDialog = true
+    // Funções para atualizar os inputs
+    fun onLocalChange(newValue: String) { localInput = newValue }
+    fun onDiaSemanaChange(newValue: String) { diaSemanaInput = newValue }
+    fun onDataChange(newValue: String) { dataInput = newValue }
+
+    fun clearInputs() {
+        localInput = ""
+        diaSemanaInput = ""
+        dataInput = ""
+        selectedWork = null
     }
+
+    fun loadWorkToEdit(work: Work) {
+        selectedWork = work
+        localInput = work.local
+        diaSemanaInput = work.dayOfWeek
+        dataInput = work.date
+    }
+    // ------------------------------------------
 
     fun onCloseDialog() {
         showDialog = false
-    }
-
-    fun onOpenSearchDialog() {
-        showSearchDialog = true
-    }
-
-    fun onCloseSearchDialog() {
-        showSearchDialog = false
+        clearInputs()
     }
 
     fun onOpenMenu() {
@@ -72,16 +86,6 @@ class WorkViewModel @Inject constructor(
         showMenu = false
     }
 
-    fun onOpenUpdateDialog(work: Work) {
-        selectedWork = work
-        showUpdateDialog = true
-    }
-
-    fun onCloseUpdateDialog() {
-        showUpdateDialog = false
-        selectedWork = null
-    }
-
     fun onOpenDeleteAllConfirmation() {
         showDeleteAllConfirmation = true
     }
@@ -90,16 +94,20 @@ class WorkViewModel @Inject constructor(
         showDeleteAllConfirmation = false
     }
 
-    fun salvar(local: String, diaSemana: String, data: String) {
+    // Agora a função salvar não precisa de parâmetros, ela usa o estado interno
+    fun salvar() {
+        if (localInput.isBlank()) return
+
         val work = Work(
             id = 0,
-            local = local,
-            dayOfWeek = diaSemana,
-            date = data
+            local = localInput,
+            dayOfWeek = diaSemanaInput,
+            date = dataInput
         )
 
         viewModelScope.launch {
             repository.insert(work)
+            clearInputs()
             onCloseDialog()
         }
     }
@@ -107,21 +115,27 @@ class WorkViewModel @Inject constructor(
     fun deletar(work: Work) {
         viewModelScope.launch {
             repository.delete(work)
-            onCloseUpdateDialog()
         }
     }
 
-    fun atualizar(work: Work) {
+    // Função atualizar agora usa os inputs do ViewModel
+    fun atualizar() {
+        val work = selectedWork ?: return
         viewModelScope.launch {
-            repository.update(work)
-            onCloseUpdateDialog()
+            repository.update(
+                work.copy(
+                    local = localInput,
+                    dayOfWeek = diaSemanaInput,
+                    date = dataInput
+                )
+            )
+            clearInputs()
         }
     }
 
     fun deletarTudo() {
         viewModelScope.launch {
             repository.deleteAll()
-            onCloseDeleteAllConfirmation()
         }
     }
 

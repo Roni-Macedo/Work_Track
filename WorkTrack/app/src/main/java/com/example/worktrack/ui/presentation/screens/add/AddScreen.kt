@@ -31,10 +31,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,12 +48,14 @@ fun AddScreen(
     onBack: () -> Unit = {},
     viewModel: WorkViewModel = hiltViewModel()
 ) {
-
-    var local by rememberSaveable { mutableStateOf("") }
-
     val info = getWeekDay()
-    var diaSemana by rememberSaveable { mutableStateOf(info.weekDay) }
-    var data by rememberSaveable { mutableStateOf(info.date) }
+
+    LaunchedEffect(Unit) {
+        if (viewModel.localInput.isEmpty()) {
+            viewModel.onDiaSemanaChange(info.weekDay)
+            viewModel.onDataChange(info.date)
+        }
+    }
 
     Scaffold(
         // Fundo azul na parte superior
@@ -104,8 +103,8 @@ fun AddScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = local,
-                onValueChange = { local = it },
+                value = viewModel.localInput,
+                onValueChange = { viewModel.onLocalChange(it) },
                 placeholder = "Ex.: Empresa, Casa, Mercado...",
                 trailingIcon = Icons.Outlined.LocationOn,
                 capitalization = KeyboardCapitalization.Words
@@ -122,8 +121,8 @@ fun AddScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = diaSemana,
-                onValueChange = { diaSemana = it },
+                value = viewModel.diaSemanaInput,
+                onValueChange = { viewModel.onDiaSemanaChange(it) },
                 placeholder = "Selecione o dia",
                 trailingIcon = Icons.Outlined.KeyboardArrowDown
             )
@@ -139,8 +138,8 @@ fun AddScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = data,
-                onValueChange = { data = it },
+                value = viewModel.dataInput,
+                onValueChange = { viewModel.onDataChange(it) },
                 placeholder = "",
                 trailingIcon = Icons.Outlined.CalendarMonth
             )
@@ -168,8 +167,8 @@ fun AddScreen(
             // Botão: Salvar registro
             Button(
                 onClick = {
-                    if (local.isNotBlank()) {
-                        viewModel.salvar(local, diaSemana, data)
+                    if (viewModel.localInput.isNotBlank()) {
+                        viewModel.salvar()
                         onBack()
                     }
                 },

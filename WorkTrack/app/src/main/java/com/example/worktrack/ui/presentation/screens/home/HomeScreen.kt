@@ -17,15 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Assignment
-import androidx.compose.material.icons.automirrored.outlined.TrendingUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -57,6 +54,7 @@ import com.example.worktrack.ui.presentation.components.getWeekDay
 import com.example.worktrack.ui.presentation.components.BottomAppBarItem
 import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 import com.example.worktrack.ui.presentation.components.CardListItem
+import com.example.worktrack.ui.presentation.components.DeleteAllDialog
 import com.example.worktrack.ui.presentation.components.NotesCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,16 +62,13 @@ import com.example.worktrack.ui.presentation.components.NotesCard
 fun HomeScreen(
     onAddClick: () -> Unit = {},
     onDashboardClick: () -> Unit = {},
+    onHomeClick: () -> Unit = {},
     onEditClick: (Long) -> Unit = {},
     onNotesClick: () -> Unit = {},
     viewModel: WorkViewModel = hiltViewModel()
 ) {
 
     val lista by viewModel.works.collectAsState()
-
-    var selectedItem by rememberSaveable {
-        mutableIntStateOf(0)
-    }
 
     Scaffold(
         containerColor = AppColors.primary(),
@@ -104,40 +99,44 @@ fun HomeScreen(
                     Row {
                         IconButton(onClick = { viewModel.onOpenMenu() }) {
                             Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Opções",
                                 tint = AppColors.onPrimary(),
                             )
                             DropdownMenu(
                                 expanded = viewModel.showMenu,
-                                onDismissRequest = { viewModel.onCloseMenu() }
+                                onDismissRequest = { viewModel.onCloseMenu() },
+                                modifier = Modifier
+                                    .background(AppColors.surface())
+                                    .border(1.dp, AppColors.outlineVariant(), RoundedCornerShape(16.dp)),
+                                shape = RoundedCornerShape(16.dp),
+                                containerColor = AppColors.surface()
                             ) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(
                                             "Excluir tudo",
-                                            fontSize = 20.sp,
-                                            color = Color.Red
+                                            style = MaterialTheme.typography.bodyLarge.copy(
+                                                fontWeight = FontWeight.Medium,
+                                                color = Color(0xFFE53935)
+                                            )
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Default.DeleteSweep,
+                                            contentDescription = null,
+                                            tint = Color(0xFFE53935),
+                                            modifier = Modifier.size(20.dp)
                                         )
                                     },
                                     onClick = {
-//                                        viewModel.onOpenDeleteAllConfirmation()
-                                        viewModel.deletarTudo()
+                                        viewModel.onOpenDeleteAllConfirmation()
                                         viewModel.onCloseMenu()
                                     }
                                 )
                             }
                         }
-
-//                        IconButton(onClick = {
-//
-//                        }) {
-//                            Icon(
-//                                imageVector = Icons.Default.Menu,
-//                                contentDescription = "More",
-//                                tint = AppColors.onPrimary(),
-//                            )
-//                        }
                     }
                 }
             }
@@ -147,49 +146,54 @@ fun HomeScreen(
                 modifier = Modifier
                     .background(AppColors.surface())
             ) {
-                NavigationBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                        .border(
-                            width = 1.dp,
-                            color = AppColors.outlineVariant(),
-                            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                        ),
-                    containerColor = AppColors.surface(),
-                    tonalElevation = 0.dp
-                ) {
-                    BottomAppBarItem(
-                        selected = selectedItem == 0,
-                        onClick = { selectedItem = 0 },
-                        icon = Icons.Default.Home,
-                        label = "Início"
-                    )
+                    NavigationBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                            .border(
+                                width = 1.dp,
+                                color = AppColors.outlineVariant(),
+                                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                            ),
+                        containerColor = AppColors.surface(),
+                        tonalElevation = 0.dp
+                    ) {
+                        BottomAppBarItem(
+                            selected = true,
+                            onClick = onHomeClick,
+                            icon = Icons.Default.Home,
+                            label = "Início"
+                        )
 
-                    BottomAppBarItem(
-                        selected = selectedItem == 1,
-                        onClick = {
-                            selectedItem = 1
-                            onAddClick()
-                        },
-                        icon = Icons.Default.Add,
-                        label = "Adicionar"
-                    )
+                        BottomAppBarItem(
+                            selected = false,
+                            onClick = onAddClick,
+                            icon = Icons.Default.Add,
+                            label = "Adicionar"
+                        )
 
-                    BottomAppBarItem(
-                        selected = selectedItem == 2,
-                        onClick = {
-                            selectedItem = 2
-                            onDashboardClick()
-                        },
-                        icon = Icons.Default.BarChart,
-                        label = "Dashboard"
-                    )
-                }
+                        BottomAppBarItem(
+                            selected = false,
+                            onClick = onDashboardClick,
+                            icon = Icons.Default.BarChart,
+                            label = "Dashboard"
+                        )
+                    }
             }
         },
 
         ) { innerPadding ->
+        
+        if (viewModel.showDeleteAllConfirmation) {
+            DeleteAllDialog(
+                onDismissRequest = { viewModel.onCloseDeleteAllConfirmation() },
+                onConfirm = {
+                    viewModel.deletarTudo()
+                    viewModel.onCloseDeleteAllConfirmation()
+                }
+            )
+        }
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -311,5 +315,3 @@ fun SummaryCard(
         }
     }
 }
-
-// Componente para os itens da lista de registros recent

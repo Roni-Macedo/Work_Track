@@ -56,15 +56,9 @@ fun EditScreen(
     val works by viewModel.works.collectAsState()
     val workToEdit = remember(id, works) { works.find { it.id.toLong() == id } }
 
-    var local by rememberSaveable { mutableStateOf("") }
-    var diaSemana by rememberSaveable { mutableStateOf("") }
-    var data by rememberSaveable { mutableStateOf("") }
-
     LaunchedEffect(workToEdit) {
         workToEdit?.let {
-            local = it.local
-            diaSemana = it.dayOfWeek
-            data = it.date
+            viewModel.loadWorkToEdit(it)
         }
     }
 
@@ -114,8 +108,8 @@ fun EditScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = local,
-                onValueChange = { local = it },
+                value = viewModel.localInput,
+                onValueChange = { viewModel.onLocalChange(it) },
                 placeholder = "Ex.: Empresa, Casa, Mercado...",
                 trailingIcon = Icons.Outlined.LocationOn,
                 capitalization = KeyboardCapitalization.Words
@@ -132,8 +126,8 @@ fun EditScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = diaSemana,
-                onValueChange = { diaSemana = it },
+                value = viewModel.diaSemanaInput,
+                onValueChange = { viewModel.onDiaSemanaChange(it) },
                 placeholder = "Selecione o dia",
                 trailingIcon = Icons.Outlined.KeyboardArrowDown
             )
@@ -149,8 +143,8 @@ fun EditScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             CustomTextField(
-                value = data,
-                onValueChange = { data = it },
+                value = viewModel.dataInput,
+                onValueChange = { viewModel.onDataChange(it) },
                 placeholder = "",
                 trailingIcon = Icons.Outlined.CalendarMonth
             )
@@ -178,14 +172,8 @@ fun EditScreen(
             // Botão: Salvar registro (Atualizar)
             Button(
                 onClick = {
-                    if (local.isNotBlank() && workToEdit != null) {
-                        viewModel.atualizar(
-                            workToEdit.copy(
-                                local = local,
-                                dayOfWeek = diaSemana,
-                                date = data
-                            )
-                        )
+                    if (viewModel.localInput.isNotBlank()) {
+                        viewModel.atualizar()
                         onBack()
                     }
                 },

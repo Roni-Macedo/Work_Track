@@ -32,6 +32,7 @@ interface WorkDao {
     GROUP BY local
     ORDER BY quantidade DESC
 """)
+
     fun getLocalCount(): Flow<List<LocalCount>>
 
     // Notes

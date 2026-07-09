@@ -33,6 +33,9 @@ fun AppNavigation() {
                         onDashboardClick = {
                             backStack.add(Dashboard)
                         },
+                        onHomeClick = {
+                            // Já está na Home
+                        },
                         onEditClick = { id ->
                             backStack.add(Edit(id))
                         },
@@ -79,6 +82,17 @@ fun AppNavigation() {
                             if (backStack.isNotEmpty()) {
                                 backStack.removeAt(backStack.size - 1)
                             }
+                        },
+                        onHomeClick = {
+                            if (backStack.isNotEmpty()) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
+                        },
+                        onAddClick = {
+                            backStack.add(Add)
+                        },
+                        onDashboardClick = {
+                            // Já está no Dashboard
                         }
                     )
                 }
