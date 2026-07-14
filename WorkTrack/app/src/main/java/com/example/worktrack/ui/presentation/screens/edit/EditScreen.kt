@@ -39,12 +39,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.worktrack.domain.model.Work
-import com.example.worktrack.ui.presentation.screens.add.CustomTextField
+import com.example.worktrack.ui.common.AppColors
+import com.example.worktrack.ui.common.AppIcon
+import com.example.worktrack.ui.common.CustomTextField
+import com.example.worktrack.ui.presentation.components.DeleteADialog
 import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 
 @Composable
@@ -83,6 +88,7 @@ fun EditScreen(
                 Text(
                     text = "Editar registro",
                     style = MaterialTheme.typography.headlineSmall,
+                    letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -90,6 +96,19 @@ fun EditScreen(
         }
     ) { paddingValues ->
         // Área branca com cantos arredondados no topo
+
+        if (viewModel.showDeleteDialog) {
+            DeleteADialog(
+                onDismissRequest = { viewModel.onCloseDeleteDialog() },
+                onConfirm = {
+                    workToEdit?.let {
+                        viewModel.deletar(it)
+                        onBack()
+                    }
+                }
+            )
+        }
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -104,6 +123,7 @@ fun EditScreen(
                 text = "Local",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
+                letterSpacing = 1.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -122,6 +142,7 @@ fun EditScreen(
                 text = "Dia da semana",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
+                letterSpacing = 1.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -139,6 +160,7 @@ fun EditScreen(
                 text = "Data",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
+                letterSpacing = 1.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -189,15 +211,18 @@ fun EditScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
+                    AppIcon(
                         imageVector = Icons.Outlined.CheckCircle,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
+                        color = AppColors.onPrimary(),
+                        modifier = Modifier.size(24.dp),
+                        onClick = {  }
                     )
+
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Atualizar registro",
                         style = MaterialTheme.typography.titleMedium,
+                        letterSpacing = 1.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -208,32 +233,32 @@ fun EditScreen(
             // Botão: Apagar registro
             Button(
                 onClick = {
-                    workToEdit?.let {
-                        viewModel.deletar(it)
-                        onBack()
-                    }
+                    viewModel.onOpenDeleteDialog()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
+                    containerColor = AppColors.error().copy(alpha = 0.6f)
                 )
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
+                    AppIcon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
+                        color = AppColors.onPrimary(),
+                        modifier = Modifier.size(24.dp),
+                        onClick = {  }
                     )
+
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Apagar registro",
                         style = MaterialTheme.typography.titleMedium,
+                        letterSpacing = 1.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }

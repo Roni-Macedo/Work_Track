@@ -34,4 +34,8 @@ object AppColors {
 
     @Composable
     fun tertiary() = MaterialTheme.colorScheme.tertiary
+
+    @Composable
+    fun error() = MaterialTheme.colorScheme.error
+
 }

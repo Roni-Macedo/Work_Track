@@ -56,6 +56,7 @@ import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 import com.example.worktrack.ui.presentation.components.CardListItem
 import com.example.worktrack.ui.presentation.components.DeleteAllDialog
 import com.example.worktrack.ui.presentation.components.NotesCard
+import com.example.worktrack.ui.presentation.components.SummaryCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,12 +89,16 @@ fun HomeScreen(
                             text = getWeekDay().weekDay,
                             color = AppColors.onPrimary(),
                             style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 1.5.sp
+
                         )
                         Text(
                             text = getWeekDay().date,
                             color = AppColors.onPrimary().copy(alpha = 0.8f),
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
+                            letterSpacing = 1.5.sp
+
                         )
                     }
                     Row {
@@ -211,6 +216,7 @@ fun HomeScreen(
                 text = "Minhas anotações",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
                 color = AppColors.onBackground(),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -239,6 +245,7 @@ fun HomeScreen(
                 text = "Registros recentes",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
                 color = AppColors.onBackground(),
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -257,60 +264,6 @@ fun HomeScreen(
                     )
 
                 }
-            }
-        }
-    }
-}
-
-// Componente para os cards de resumo estatístico
-@Composable
-fun SummaryCard(
-    title: String,
-    value: String,
-    icon: ImageVector,
-    iconColor: Color,
-    modifier: Modifier = Modifier
-) {
-
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(iconColor.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(24.dp)
-                )
             }
         }
     }

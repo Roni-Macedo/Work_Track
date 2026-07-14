@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.worktrack.domain.model.Work
 import com.example.worktrack.ui.common.AppColors
 import com.example.worktrack.ui.common.AppIcon
@@ -73,12 +74,14 @@ fun CardListItem(item: Work, onEditClick: (Long) -> Unit = {},) {
                 Text(
                     text = item.local,
                     style = MaterialTheme.typography.titleSmall,
+                    letterSpacing = 1.sp,
                     fontWeight = FontWeight.Bold,
                     color = AppColors.onSurface()
                 )
                 Text(
                     text = item.dayOfWeek,
                     style = MaterialTheme.typography.bodySmall,
+                    letterSpacing = 1.sp,
                     color = AppColors.onSurfaceVariant()
                 )
             }
@@ -87,6 +90,7 @@ fun CardListItem(item: Work, onEditClick: (Long) -> Unit = {},) {
                 Text(
                     text = item.date,
                     style = MaterialTheme.typography.labelSmall,
+                    letterSpacing = 1.sp,
                     color = AppColors.onSurfaceVariant()
                 )
             }
@@ -96,6 +100,7 @@ fun CardListItem(item: Work, onEditClick: (Long) -> Unit = {},) {
             AppIcon(
                 imageVector = Icons.Default.ChevronRight,
                 color = AppColors.onSurfaceVariant(),
+                modifier = Modifier.size(24.dp),
                 onClick = { onEditClick(item.id.toLong()) }
             )
 

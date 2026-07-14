@@ -36,8 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.worktrack.ui.presentation.screens.add.CustomTextField
+import com.example.worktrack.ui.common.AppColors
+import com.example.worktrack.ui.common.AppIcon
+import com.example.worktrack.ui.common.CustomTextField
 import com.example.worktrack.ui.presentation.viewmodel.WorkViewModel
 
 @Composable
@@ -74,6 +77,7 @@ fun NotesScreen(
                 Text(
                     text = "Minhas notas",
                     style = MaterialTheme.typography.headlineSmall,
+                    letterSpacing = 1.5.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -93,14 +97,6 @@ fun NotesScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Campo: Observações
-//            Text(
-//                text = "Observações (opcional)",
-//                style = MaterialTheme.typography.titleSmall,
-//                color = MaterialTheme.colorScheme.onBackground,
-//                fontWeight = FontWeight.Bold,
-//                modifier = Modifier.padding(bottom = 8.dp)
-//            )
             CustomTextField(
                 value = nota,
                 onValueChange = { nota = it },
@@ -130,15 +126,16 @@ fun NotesScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(
+                    AppIcon(
                         imageVector = Icons.Outlined.CheckCircle,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
+                        color = AppColors.onPrimary(),
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Salvar registro",
                         style = MaterialTheme.typography.titleMedium,
+                        letterSpacing = 1.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }

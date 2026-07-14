@@ -19,6 +19,8 @@ val YellowWarning = Color(0xFFFFB300)
 val BackgroundLight = Color(0xFFF5F7FA)
 val SurfaceLight = Color(0xFFFFFFFF)
 
+val RedError = Color(0xFFE53935)
+
 // Text
 val TextPrimary = Color(0xFF1F2937)
 val TextSecondary = Color(0xFF6B7280)

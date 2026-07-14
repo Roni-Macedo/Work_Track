@@ -39,6 +39,9 @@ class WorkViewModel @Inject constructor(
     var showDeleteAllConfirmation by mutableStateOf(false)
         private set
 
+    var showDeleteDialog by mutableStateOf(false)
+        private set
+
     var showMenu by mutableStateOf(false)
         private set
 
@@ -93,6 +96,15 @@ class WorkViewModel @Inject constructor(
     fun onCloseDeleteAllConfirmation() {
         showDeleteAllConfirmation = false
     }
+
+    fun onOpenDeleteDialog() {
+        showDeleteDialog = true
+    }
+
+    fun onCloseDeleteDialog() {
+        showDeleteDialog = false
+    }
+
 
     // Agora a função salvar não precisa de parâmetros, ela usa o estado interno
     fun salvar() {
